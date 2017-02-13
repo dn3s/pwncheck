@@ -1,0 +1,47 @@
+#!/usr/bin/env python3
+import sys, requests, json, os, time
+if sys.stdout.isatty():
+	rst="\033[0m"
+	red="\033[31m"
+	grn="\033[32m"
+else:
+	rst=""
+	red=""
+	grn=""
+delay=0
+emails=[[email] for email in sys.argv[1:]]
+filename=os.path.join(os.getenv("HOME"), ".emails")
+if(os.path.isfile(filename)):
+	with open(filename) as f:
+		for line in f:
+			if(line.strip()):
+				emails.append(line.strip().split(" "))
+else:
+	print("For convenience, you can list email addresses you care about in '{0}'; each line should contain one email, followed by a space-separated list of breaches you already know about.".format(filename))
+length=max(len(e[0]) for e in emails)
+for email in emails:
+	print((email[0]+":").ljust(length+2), end="")
+	sys.stdout.flush()
+	time.sleep(delay)
+	r=requests.get("https://haveibeenpwned.com/api/v2/breachedaccount/{0}".format(email[0]), headers={"User-Agent": "pwncheck (by dn3s)"})
+	breaches=[]
+	if r.status_code == 200:
+		breaches=[breach for breach in sorted(json.loads(r.text), key=lambda a: a["BreachDate"]) if not breach["Name"] in email[1:]]
+
+	if r.status_code == 404 or not breaches:
+		print("[" + grn + "clean" + rst + "]")
+	elif r.status_code == 200:
+		print("[" + red + "pwned" + rst + "]" + red)
+		print("\n".join(
+			"- {0} {1} ({2}) ({3})".format(
+				breach["BreachDate"],
+				breach["Name"],
+				breach["Domain"],
+				", ".join(breach["DataClasses"])
+				)
+			for breach in breaches
+			))
+		print(rst, end="")
+	else:
+		print("error ({0})".format(r.status_code))
+	delay=1.6
