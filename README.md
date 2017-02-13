@@ -6,7 +6,8 @@ Uses [haveibeenpwned](https://haveibeenpwned.com/)'s REST API.
 
 ## Requirements
 
-- Linux
+- Linux (or most any other unix-ey OS. Could be easily made Windows-compatible
+  if there's interest)
 - Recent Python3
 - Python `Requests` module
 
