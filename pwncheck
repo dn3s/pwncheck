@@ -10,7 +10,7 @@ else:
 	grn=""
 delay=0
 emails=[[email] for email in sys.argv[1:]]
-filename=os.path.join(os.getenv("HOME"), ".emails")
+filename=os.path.join(os.getenv("HOME"), ".pwncheck_emails")
 if(os.path.isfile(filename)):
 	with open(filename) as f:
 		for line in f:

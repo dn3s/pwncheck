@@ -14,7 +14,8 @@ Uses [haveibeenpwned](https://haveibeenpwned.com/)'s REST API.
 ## Usage
 
 - `pwncheck <email1> [<email2> [...<emailn>]]`
-- Create a file at `~/.emails`, with one email address per line to save on typing
+- Create a file at `~/.pwnheck_emails`, with one email address per line to save
+  on typing
 - Once you've addressed a leak and don't need to be alerted about it anymore,
   append a space, followed by the name (The first word after the date of the
   leak) to the end of the email address in your `~/.emails` file. Multiple
